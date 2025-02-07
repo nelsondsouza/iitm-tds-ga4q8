@@ -1,29 +1,26 @@
 name: Daily Commit
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-
 jobs:
-  update-repo:
+  commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Make changes
+      - name: Configure Git (22f1001290@ds.study.iitm.ac.in)
         run: |
-          echo "Some changes" >> last_run.txt
-
-      - name: Commit changes
-        run: |
-          git config --global user.name "Nelson Jochim DSouza"
+          git config --global user.name "GitHub Action"
           git config --global user.email "22f1001290@ds.study.iitm.ac.in"
-          git add .
-          git commit -m "Daily update"
 
-      - name: Pull latest changes
-        run: git pull --rebase origin main
+      - name: Update from Remote
+        run: git pull origin main
 
-      - name: Push changes
-        run: git push origin main
+      - name: Make a Change
+        run: |
+          echo "Last run: $(date)" > last_run.txt  # Always modify the file
+
+      - name: Commit and Push Changes
+        run: |
+          git add last_run.txt
+          git commit -m "Automated daily commit at $(date)" || echo "No changes to commit"
+          git push
